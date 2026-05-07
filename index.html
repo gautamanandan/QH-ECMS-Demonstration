@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queensland Health · ECMS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --qh-maroon: #7B1C1C;
+      --qh-maroon-dark: #5E1515;
+      --qh-red-link: #C0392B;
+      --bg: #F2F3F5;
+      --white: #FFFFFF;
+      --border: #E2E4E8;
+      --border-light: #F0F1F3;
+      --text: #111827;
+      --text-muted: #6B7280;
+      --text-faint: #9CA3AF;
+      --high-bg: #FEE2E2;
+      --high-text: #B91C1C;
+      --medium-bg: #FEF3C7;
+      --medium-text: #B45309;
+      --green: #15803D;
+      --orange: #B45309;
+      --danger: #B91C1C;
+      --blue: #1D4ED8;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --radius: 7px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    a { cursor: pointer; }
+
+    /* ─── HEADER ─────────────────────────────────────────────── */
+    .hdr {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .hdr-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .hdr-shield {
+      width: 34px;
+      height: 34px;
+    }
+
+    .hdr-qh-text {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--qh-maroon);
+      line-height: 1.25;
+      letter-spacing: 0.01em;
+    }
+
+    .hdr-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
+
+    .hdr-ecms { font-size: 15px; font-weight: 600; color: var(--text); }
+    .hdr-demo { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+
+    .hdr-search {
+      flex: 1;
+      max-width: 380px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .hdr-search svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+
+    .hdr-search input {
+      width: 100%;
+      padding: 6px 12px 6px 32px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      background: #F8F9FB;
+      color: var(--text);
+      font-family: var(--font);
+      outline: none;
+    }
+
+    .hdr-search input:focus { border-color: #9CA3AF; background: var(--white); }
+
+    .hdr-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border: none;
+      background: none;
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: var(--font);
+      font-weight: 500;
+      transition: background 0.1s;
+    }
+    .nav-btn:hover { background: #F3F4F6; color: var(--text); }
+    .nav-btn.active { color: var(--text); background: #F0F1F3; }
+
+    .hdr-reset {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: var(--font);
+    }
+    .hdr-reset:hover { background: #F9FAFB; }
+
+    .hdr-notif {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+    .hdr-notif:hover { background: #F3F4F6; }
+    .notif-dot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 15px;
+      height: 15px;
+      background: #DC2626;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+    .user-chip:hover { background: #F3F4F6; }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .av-ds { background: var(--qh-maroon); }
+    .av-sm { background: #2563EB; }
+    .av-hm { background: #16A34A; }
+    .av-sy { background: #6B7280; }
+    .av-dj { background: #7C3AED; }
+
+    .user-info-text { text-align: right; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2; }
+    .user-role { font-size: 10.5px; color: var(--text-muted); }
+
+    /* ─── PAGE TOGGLE ─────────────────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── COMMON ──────────────────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title { font-size: 13px; font-weight: 600; color: var(--text); }
+    .card-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+    .link { color: var(--qh-red-link); text-decoration: none; font-size: 12px; }
+    .link:hover { text-decoration: underline; }
+
+    .badge-high {
+      display: inline-flex;
+      padding: 2px 8px;
+      background: var(--high-bg);
+      color: var(--high-text);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .badge-medium {
+      display: inline-flex;
+      padding: 2px 8px;
+      background: var(--medium-bg);
+      color: var(--medium-text);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* ─── PORTAL PAGE ─────────────────────────────────────────── */
+    .portal-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+
+    /* Welcome banner */
+    .welcome {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 260px;
+      background: linear-gradient(120deg, transparent 0%, #FEE2E2 100%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .welcome-date { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .welcome-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; letter-spacing: -0.3px; }
+    .welcome-sub { font-size: 13px; color: var(--text-muted); }
+    .welcome-sub a { color: var(--qh-red-link); text-decoration: none; }
+    .welcome-sub a:hover { text-decoration: underline; }
+    .welcome-sub strong { color: var(--text); }
+
+    .welcome-btns { display: flex; gap: 10px; position: relative; z-index: 1; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: var(--qh-maroon);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      line-height: 1.35;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--qh-maroon-dark); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: #F9FAFB; }
+
+    /* 3-column grid */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    /* Inventory */
+    .inv-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .inv-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .inv-item:first-child { padding-top: 0; }
+
+    .inv-name { font-size: 13px; font-weight: 500; flex: 1; }
+    .inv-detail { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* Hazard icon diamonds */
+    .hazard-wrap { width: 26px; flex-shrink: 0; }
+
+    /* Tasks */
+    .task-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.1s;
+    }
+    .task-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .task-item:first-child { padding-top: 0; }
+    .task-item:hover { background: #F9FAFB; margin: 0 -8px; padding-left: 8px; padding-right: 8px; }
+
+    .task-icon-wrap { margin-top: 1px; flex-shrink: 0; }
+    .task-id { font-size: 11px; font-weight: 600; color: var(--qh-red-link); margin-bottom: 1px; }
+    .task-id.blue { color: #2563EB; }
+    .task-label { font-size: 13px; font-weight: 500; margin-bottom: 2px; line-height: 1.35; }
+    .task-meta { font-size: 11px; color: var(--text-muted); }
+
+    /* Training */
+    .training-progress { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; margin-top: 2px; }
+    .training-item {
+      display: flex;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-light);
+      align-items: flex-start;
+    }
+    .training-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .training-item:first-child { padding-top: 0; }
+    .training-name { font-size: 13px; font-weight: 500; }
+    .training-status { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .training-status.overdue { color: var(--danger); font-weight: 600; }
+
+    /* Bottom row */
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 230px;
+      gap: 16px;
+    }
+
+    /* Activity */
+    .act-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .act-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .act-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .act-item:first-child { padding-top: 4px; }
+
+    .act-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; flex: 1; }
+    .act-text strong { color: var(--text); font-weight: 600; }
+    .act-text a { color: var(--qh-red-link); text-decoration: none; }
+    .act-text a:hover { text-decoration: underline; }
+    .act-time { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+    .act-icon { color: var(--border); flex-shrink: 0; margin-top: 3px; }
+
+    /* Quick actions */
+    .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .qa-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 10px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.1s;
+    }
+    .qa-btn:hover { background: #F9FAFB; border-color: #C9CDD4; }
+
+    /* ─── REQUEST PAGE ────────────────────────────────────────── */
+    .req-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 20px 40px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb .sep { margin: 0 5px; }
+
+    .req-ref { font-size: 13px; margin-bottom: 6px; }
+    .req-ref .ref-id { color: var(--qh-red-link); font-weight: 600; }
+    .req-ref .draft { color: var(--text-muted); }
+
+    .req-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .req-title { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .req-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+    .req-header-btns { display: flex; gap: 8px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.1s;
+    }
+    .btn-outline:hover { background: #F9FAFB; }
+
+    /* 2-col layout */
+    .req-layout {
+      display: grid;
+      grid-template-columns: 1fr 286px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* Form sections */
+    .form-sec {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .form-sec-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
+
+    /* Incompatibility alert */
+    .incompat-alert {
+      background: #FEF2F2;
+      border: 1px solid #FCCACA;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+    .incompat-hdr {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #7F1D1D;
+      margin-bottom: 10px;
+    }
+    .incompat-body {
+      font-size: 12.5px;
+      color: #7F1D1D;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .incompat-body strong { font-weight: 600; }
+    .incompat-body a { color: #991B1B; text-decoration: underline; }
+    .incompat-why {
+      background: white;
+      border: 1px solid #FCCACA;
+      border-radius: 5px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #7F1D1D;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .incompat-why strong { font-weight: 700; }
+    .incompat-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .btn-alert-primary {
+      padding: 7px 14px;
+      background: var(--qh-maroon);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-alert-primary:hover { background: var(--qh-maroon-dark); }
+
+    .btn-alert-ghost {
+      padding: 7px 14px;
+      background: transparent;
+      color: #7F1D1D;
+      border: 1px solid #FCCACA;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-alert-ghost:hover { background: #FEE2E2; }
+
+    .btn-alert-warn {
+      padding: 7px 14px;
+      background: transparent;
+      color: #92400E;
+      border: 1px solid #FCD34D;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-alert-warn:hover { background: #FFFBEB; }
+
+    /* Suggested locations */
+    .suggested {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+    }
+    .suggested-title { font-size: 12px; font-weight: 700; color: #1E40AF; margin-bottom: 10px; }
+    .loc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: white;
+      border: 1px solid #BFDBFE;
+      border-radius: 5px;
+      margin-bottom: 6px;
+    }
+    .loc-item:last-child { margin-bottom: 0; }
+    .loc-name { font-size: 13px; font-weight: 600; color: #1E40AF; margin-bottom: 1px; }
+    .loc-detail { font-size: 11px; color: var(--text-muted); }
+    .btn-select {
+      padding: 5px 12px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+      flex-shrink: 0;
+      color: var(--text);
+    }
+    .btn-select:hover { background: #F0F4FF; border-color: #93C5FD; color: #1E40AF; }
+
+    /* Form fields */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+
+    label { font-size: 12px; font-weight: 600; color: var(--text); }
+    label .req { color: var(--danger); margin-left: 1px; }
+
+    .form-ctrl {
+      padding: 8px 10px;
+      border: 1px solid #D1D5DB;
+      border-radius: 5px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: var(--font);
+      background: white;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-ctrl:focus { border-color: #6B7280; box-shadow: 0 0 0 2px rgba(107,114,128,0.12); }
+    select.form-ctrl { cursor: pointer; }
+    textarea.form-ctrl { resize: vertical; min-height: 78px; line-height: 1.5; }
+
+    .field-tags { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+    .loc-path { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+
+    /* Form footer */
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 18px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .footer-note { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+    .footer-btns { display: flex; gap: 8px; }
+    .btn-submit-disabled {
+      padding: 8px 16px;
+      background: #E9EAEC;
+      color: #9CA3AF;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: not-allowed;
+      font-family: var(--font);
+    }
+
+    /* Sidebar */
+    .sidebar-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-card:last-child { margin-bottom: 0; }
+    .sb-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .reviewer-row { display: flex; align-items: flex-start; gap: 8px; }
+    .reviewer-name { font-size: 13px; font-weight: 600; }
+    .reviewer-role { font-size: 11.5px; color: var(--text-muted); }
+    .sla-note { font-size: 11.5px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+
+    .sb-detail { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+    .audit-row {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-light);
+      line-height: 1.5;
+    }
+    .audit-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .audit-row:first-child { padding-top: 0; }
+    .conflict { color: var(--danger); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="hdr">
+  <a class="hdr-logo" onclick="showPage('portal')">
+    <svg class="hdr-shield" viewBox="0 0 34 38" fill="none">
+      <path d="M17 1L2 7.5V19c0 9.5 6.5 16.5 15 18 8.5-1.5 15-8.5 15-18V7.5L17 1z" fill="#7B1C1C"/>
+      <path d="M17 5L5 10.5V19c0 7.5 5 13 12 15 7-2 12-7.5 12-15V10.5L17 5z" fill="white" opacity="0.12"/>
+      <text x="17" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="white" font-family="Georgia,serif">QH</text>
+    </svg>
+    <span class="hdr-qh-text">Queensland<br>Health</span>
+  </a>
+
+  <div class="hdr-sep"></div>
+  <span class="hdr-ecms">ECMS</span>
+  <span class="hdr-demo">Demo</span>
+
+  <div class="hdr-search" id="hdrSearch">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" placeholder="acetone">
+  </div>
+
+  <div class="hdr-actions">
+    <button class="nav-btn active" id="navPortal" onclick="showPage('portal')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      Portal
+    </button>
+    <button class="nav-btn" id="navWorkspace" onclick="showPage('portal')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      Workspace
+    </button>
+    <button class="hdr-reset">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+      </svg>
+      Reset
+    </button>
+    <button class="hdr-notif">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="notif-dot">3</span>
+    </button>
+    <div class="user-chip">
+      <div class="user-info-text">
+        <div class="user-name">Dr Sarah Chen</div>
+        <div class="user-role">Senior Scientist · Royal Brisbane and Women's Hospital</div>
+      </div>
+      <div class="avatar av-ds">DS</div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════ PAGE 1: PORTAL ═══════════════════ -->
+<div id="portal-page" class="page active">
+  <div class="portal-wrap">
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div>
+        <div class="welcome-date">Friday 01 May 2026 · AEST</div>
+        <div class="welcome-title">Welcome back, Sarah.</div>
+        <div class="welcome-sub">
+          You have <strong>3 pending tasks</strong> and <strong>0 SDS expiry alerts</strong> at
+          <a href="#">Royal Brisbane and Women's Hospital</a>, <a href="#">Lab 312 — Wet chemistry</a>.
+        </div>
+      </div>
+      <div class="welcome-btns">
+        <button class="btn-primary" onclick="showPage('request')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Request hazardous<br>addition</span>
+        </button>
+        <button class="btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          Search catalogue
+        </button>
+      </div>
+    </div>
+
+    <!-- 3-col dashboard -->
+    <div class="dash-grid">
+
+      <!-- ── Inventory ── -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+          <div class="card-title">My location's inventory</div>
+          <a class="link">View all</a>
+        </div>
+        <div class="card-sub" style="margin-bottom:12px">Lab 312 — Wet chemistry</div>
+
+        <div class="inv-item">
+          <div class="hazard-wrap">
+            <svg viewBox="0 0 26 26" width="26" height="26">
+              <polygon points="13,2 24,22 2,22" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.8"/>
+              <text x="13" y="18" text-anchor="middle" font-size="9" fill="#DC2626" font-weight="bold">!</text>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="inv-name">Hydrogen peroxide 30%</div>
+            <div class="inv-detail">2.5 L · Oxidisers Locker B</div>
+          </div>
+          <span class="badge-high">High</span>
+        </div>
+
+        <div class="inv-item">
+          <div class="hazard-wrap">
+            <svg viewBox="0 0 26 26" width="26" height="26">
+              <polygon points="13,2 24,13 13,24 2,13" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.8"/>
+              <polygon points="13,7 19,13 13,19 7,13" fill="none" stroke="#DC2626" stroke-width="1"/>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="inv-name">Potassium permanganate</div>
+            <div class="inv-detail">500 g · Oxidisers Locker B</div>
+          </div>
+          <span class="badge-high">High</span>
+        </div>
+
+        <div class="inv-item">
+          <div class="hazard-wrap">
+            <svg viewBox="0 0 26 26" width="26" height="26">
+              <polygon points="13,2 24,22 2,22" fill="#FEF3C7" stroke="#D97706" stroke-width="1.8"/>
+              <text x="13" y="18" text-anchor="middle" font-size="8" fill="#D97706">♦</text>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="inv-name">Isopropyl alcohol 70%</div>
+            <div class="inv-detail">4 L · Flammables Cabinet A</div>
+          </div>
+          <span class="badge-medium">Medium</span>
+        </div>
+
+        <div class="inv-item">
+          <div class="hazard-wrap">
+            <svg viewBox="0 0 26 26" width="26" height="26">
+              <polygon points="13,2 24,22 2,22" fill="#FEF3C7" stroke="#D97706" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="inv-name">Ethanol absolute</div>
+            <div class="inv-detail">2.5 L · Flammables Cabinet A</div>
+          </div>
+          <span class="badge-medium">Medium</span>
+        </div>
+
+        <div class="inv-item">
+          <div class="hazard-wrap">
+            <svg viewBox="0 0 26 26" width="26" height="26">
+              <polygon points="13,2 24,13 13,24 2,13" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.8"/>
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="inv-name">Acetic acid glacial</div>
+            <div class="inv-detail">1 L · Flammables Cabinet A</div>
+          </div>
+          <span class="badge-high">High</span>
+        </div>
+      </div>
+
+      <!-- ── Tasks ── -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div class="card-title">My tasks and approvals</div>
+          <span style="font-size:12px;font-weight:600;color:var(--text-muted);background:#F0F1F3;padding:1px 8px;border-radius:20px">3</span>
+        </div>
+
+        <div class="task-item">
+          <div class="task-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="1.5" y="1.5" width="13" height="13" rx="2" stroke="#D1D5DB" stroke-width="1.4"/>
+              <path d="M4 8l2.8 2.8L12 5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="task-id">TSK-0691</div>
+            <div class="task-label">Annual stock inspection · Cabinet B oxidisers</div>
+            <div class="task-meta">Due tomorrow · High priority</div>
+          </div>
+        </div>
+
+        <div class="task-item">
+          <div class="task-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6.5" stroke="#D1D5DB" stroke-width="1.4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="task-id">TSK-0692</div>
+            <div class="task-label">Review draft risk assessment RA-2026-0150 (custom fixative)</div>
+            <div class="task-meta">Due 4 days ago · High priority</div>
+          </div>
+        </div>
+
+        <div class="task-item" onclick="showPage('request')">
+          <div class="task-icon-wrap">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="6.5" stroke="#3B82F6" stroke-width="1.4"/>
+              <line x1="8" y1="5" x2="8" y2="11" stroke="#3B82F6" stroke-width="1.4"/>
+              <line x1="5" y1="8" x2="11" y2="8" stroke="#3B82F6" stroke-width="1.4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="task-id blue">REQ-2026-0089</div>
+            <div class="task-label">Hazardous addition: Acetone – Lab 312 (awaiting WHS)</div>
+            <div class="task-meta">No due date · Medium priority</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Training ── -->
+      <div class="card">
+        <div style="margin-bottom:2px" class="card-title">My training and competency</div>
+        <div class="training-progress">3 of 3 chemical handling modules</div>
+
+        <div class="training-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:2px">
+            <circle cx="8" cy="8" r="7" stroke="#15803D" stroke-width="1.5"/>
+            <path d="M5 8l2.3 2.3L11 5.3" stroke="#15803D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <div class="training-name">Chemical handling</div>
+            <div class="training-status">Current to 17 Mar 2027</div>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:2px">
+            <path d="M8 1.5L14.5 13.5H1.5L8 1.5z" stroke="#D97706" stroke-width="1.5" fill="none"/>
+            <line x1="8" y1="6" x2="8" y2="10" stroke="#D97706" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="8" cy="12" r="0.6" fill="#D97706"/>
+          </svg>
+          <div>
+            <div class="training-name">Hazardous spills</div>
+            <div class="training-status overdue">OVERDUE — last completed 13 Apr 2026</div>
+          </div>
+        </div>
+
+        <div class="training-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:2px">
+            <circle cx="8" cy="8" r="7" stroke="#15803D" stroke-width="1.5"/>
+            <path d="M5 8l2.3 2.3L11 5.3" stroke="#15803D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>
+            <div class="training-name">GHS labelling</div>
+            <div class="training-status">Current to 28 Oct 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="bottom-row">
+
+      <!-- Recent activity -->
+      <div class="card">
+        <div class="act-header">
+          <div class="card-title">Recent activity</div>
+          <a class="link">Open in workspace</a>
+        </div>
+
+        <div class="act-item">
+          <div class="avatar av-ds" style="width:28px;height:28px;font-size:10px;flex-shrink:0">DS</div>
+          <div style="flex:1">
+            <div class="act-text">
+              <strong>Dr Sarah Chen</strong> started hazardous addition request
+              <a onclick="showPage('request')">REQ-2026-0089 Acetone – Lab 312</a>
+            </div>
+            <div class="act-time">01 May 2026 08:18 AEST</div>
+          </div>
+          <div class="act-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="act-item">
+          <div class="avatar av-sm" style="width:28px;height:28px;font-size:10px;flex-shrink:0">SM</div>
+          <div style="flex:1">
+            <div class="act-text">
+              <strong>Susan Mannerheim</strong> approved risk assessment
+              <a href="#">RA-2026-0140 Sodium hydroxide 1M</a>
+            </div>
+            <div class="act-time">01 May 2026 04:42 AEST</div>
+          </div>
+          <div class="act-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="act-item">
+          <div class="avatar av-hm" style="width:28px;height:28px;font-size:10px;flex-shrink:0">HM</div>
+          <div style="flex:1">
+            <div class="act-text">
+              <strong>Hannah McLeod</strong> added inventory
+              <a href="#">Custom Histology Fixative INV-0017</a>
+            </div>
+            <div class="act-time">30 Apr 2026 21:30 AEST</div>
+          </div>
+          <div class="act-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9 2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9 2.83-2.83"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="act-item">
+          <div class="avatar av-sy" style="width:28px;height:28px;font-size:10px;flex-shrink:0">SY</div>
+          <div style="flex:1">
+            <div class="act-text">
+              <strong>System</strong> flagged SDS expiry
+              <a href="#">PRD-0023 Hematoxylin SDS expires in 14 days</a>
+            </div>
+            <div class="act-time">30 Apr 2026 16:42 AEST</div>
+          </div>
+          <div class="act-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="act-item">
+          <div class="avatar av-dj" style="width:28px;height:28px;font-size:10px;flex-shrink:0">DJ</div>
+          <div style="flex:1">
+            <div class="act-text">
+              <strong>Dr James O'Brien</strong> submitted risk assessment
+              <a href="#">RA-2026-0144 Ethylene oxide</a>
+            </div>
+            <div class="act-time">30 Apr 2026 09:30 AEST</div>
+          </div>
+          <div class="act-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="card">
+        <div class="card-title">Quick actions</div>
+        <div class="qa-grid">
+          <button class="qa-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            Search SDS
+          </button>
+          <button class="qa-btn" onclick="showPage('request')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add product
+          </button>
+          <button class="qa-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Scan barcode
+          </button>
+          <button class="qa-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            </svg>
+            Report incident
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════ PAGE 2: REQUEST FORM ═══════════════════ -->
+<div id="request-page" class="page">
+  <div class="req-wrap">
+
+    <div class="breadcrumb">
+      <a onclick="showPage('portal')">Portal</a>
+      <span class="sep">›</span>
+      <span>Request to add hazardous product</span>
+    </div>
+
+    <div class="req-ref">
+      <span class="ref-id">REQ-2026-0089</span>
+      <span class="draft"> · Draft</span>
+    </div>
+
+    <div class="req-header">
+      <div>
+        <div class="req-title">Request to add hazardous product</div>
+        <div class="req-subtitle">Submission triggers WHS Advisor approval workflow (BR004).</div>
+      </div>
+      <div class="req-header-btns">
+        <button class="btn-outline" onclick="showPage('portal')">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Discard
+        </button>
+        <button class="btn-outline">Save draft</button>
+      </div>
+    </div>
+
+    <div class="req-layout">
+
+      <!-- ── Left: form ── -->
+      <div>
+        <div class="form-sec">
+          <div class="form-sec-title">Product and location</div>
+
+          <!-- Incompatibility alert -->
+          <div class="incompat-alert">
+            <div class="incompat-hdr">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="2.2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              Incompatibility detected (BR008, BR009)
+            </div>
+            <div class="incompat-body">
+              The location <strong>Flammables Cabinet A</strong> sits inside <strong>Lab 312 — Wet chemistry</strong>, which already holds:<br><br>
+              · <strong>2.5 L</strong> of <a href="#">Hydrogen peroxide 30% (CAS 7722-64-1)</a> — held in Oxidisers Locker B<br>
+              · <strong>500 g</strong> of <a href="#">Potassium permanganate (CAS 7722-64-7)</a> — held in Oxidisers Locker B
+            </div>
+            <div class="incompat-why">
+              <strong>Why this matters:</strong> Acetone is a flammable solvent (DG Class 3); Hydrogen peroxide 30% is a strong oxidiser (DG Class 5.1).
+              Storing them together violates AS/NZS 4452 segregation requirements and creates a credible <strong>fire</strong> and <strong>explosion</strong> hazard.
+            </div>
+            <div class="incompat-actions">
+              <button class="btn-alert-primary">Choose compatible location</button>
+              <button class="btn-alert-ghost">Move oxidiser instead</button>
+              <button class="btn-alert-warn">Override (requires WHS sign-off)</button>
+            </div>
+          </div>
+
+          <!-- Suggested locations -->
+          <div class="suggested">
+            <div class="suggested-title">Suggested compatible locations within Royal Brisbane and Women's Hospital</div>
+            <div class="loc-item">
+              <div>
+                <div class="loc-name">Lab 312 — Flammables Cabinet A</div>
+                <div class="loc-detail">same room (cabinet sibling) · AS 1940 flammables cabinet, no oxidisers present</div>
+              </div>
+              <button class="btn-select">Select</button>
+            </div>
+            <div class="loc-item">
+              <div>
+                <div class="loc-name">Bulk Chemical Store, Building 7 L1</div>
+                <div class="loc-detail">2 levels away ~80m · Bulk store with segregated oxidiser locker</div>
+              </div>
+              <button class="btn-select">Select</button>
+            </div>
+            <div class="loc-item">
+              <div>
+                <div class="loc-name">Theatre 2 prep area, Block A</div>
+                <div class="loc-detail">across courtyard, ~140m · No oxidiser holdings; small-volume use only</div>
+              </div>
+              <button class="btn-select">Select</button>
+            </div>
+          </div>
+
+          <!-- Form fields -->
+          <div class="form-row">
+            <div class="form-group">
+              <label>Product <span class="req">*</span></label>
+              <select class="form-ctrl">
+                <option>Acetone (67-64-1)</option>
+              </select>
+              <div class="field-tags">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                </svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2">
+                  <polygon points="12,2 22,12 12,22 2,12"/>
+                </svg>
+                <span class="badge-high" style="font-size:10px;padding:1px 6px">High</span>
+                <span style="font-size:11px;color:var(--text-muted)">DG 3</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Location <span class="req">*</span></label>
+              <select class="form-ctrl">
+                <option>Level 3 — Chemistry › Lab 312 — Wet chemistry › Flammabl...</option>
+              </select>
+              <div class="loc-path">Metro North HHS / Royal Brisbane and Women's Hospital / Building 7 — Pathology / Level 3 — Chemistry / Lab 312 — Wet chemistry / Flammables Cabinet A</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quantity <span class="req">*</span></label>
+              <input type="text" class="form-ctrl" value="500">
+            </div>
+            <div class="form-group">
+              <label>Units <span class="req">*</span></label>
+              <select class="form-ctrl">
+                <option>mL</option>
+                <option>L</option>
+                <option>g</option>
+                <option>kg</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Batch number</label>
+              <input type="text" class="form-ctrl" value="ACT-LAB312-2026-0089">
+            </div>
+            <div class="form-group">
+              <label>Expiry date <span class="req">*</span></label>
+              <input type="text" class="form-ctrl" value="22/10/2027">
+            </div>
+          </div>
+
+          <div class="form-row" style="grid-template-columns:1fr;margin-bottom:14px">
+            <div class="form-group">
+              <label>Custodian <span class="req">*</span></label>
+              <select class="form-ctrl" style="max-width:50%">
+                <option>Dr Sarah Chen (Lab Technician)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Reason for addition</label>
+            <textarea class="form-ctrl">Required for new wet-chemistry SOP RBWH-CHEM-014; replacing legacy supply rotated out at last inspection.</textarea>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="form-footer">
+          <div class="footer-note">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Submission disabled while incompatibility alert is active
+          </div>
+          <div class="footer-btns">
+            <button class="btn-outline" onclick="showPage('portal')">Cancel</button>
+            <button class="btn-submit-disabled" disabled>Submit for approval</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Right: sidebar ── -->
+      <div>
+        <div class="sidebar-card">
+          <div class="sb-label">Approval Workflow</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px">This request will be reviewed by:</div>
+          <div class="reviewer-row">
+            <div class="avatar av-sm" style="width:28px;height:28px;font-size:10px">SM</div>
+            <div>
+              <div class="reviewer-name">Susan Mannerheim</div>
+              <div class="reviewer-role">WHS Advisor, Metro North HHS</div>
+            </div>
+          </div>
+          <div class="sla-note">Expected SLA: 2 business days · Escalates to Aisha Rahman after 3 days</div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sb-label">SDS Check</div>
+          <div class="sb-detail">
+            SDS reviewed 01 May 2025<br>
+            SDS for Acetone v3.0, issued 01 May 2025.
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sb-label">Audit History</div>
+          <div class="audit-row">
+            01 May 2026 08:18 AEST — Dr Sarah Chen started request
+          </div>
+          <div class="audit-row">
+            01 May 2026 08:32 AEST — System ran incompatibility check (BR008):
+            <span class="conflict">1 conflict</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page + '-page').classList.add('active');
+
+    const isPortal = page === 'portal';
+    document.getElementById('hdrSearch').style.display = isPortal ? 'block' : 'none';
+    document.getElementById('navPortal').classList.toggle('active', isPortal);
+    document.getElementById('navWorkspace').classList.remove('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
