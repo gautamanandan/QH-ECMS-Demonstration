@@ -433,6 +433,27 @@
     }
     .qa-btn:hover { background: #F9FAFB; border-color: #C9CDD4; }
 
+    /* ─── FILTER CHIPS ───────────────────────────────────────── */
+    .filter-chip {
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      background: var(--white);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.1s;
+    }
+    .filter-chip:hover { border-color: #9CA3AF; color: var(--text); background: #F9FAFB; }
+    .active-chip {
+      background: #EFF6FF;
+      border-color: #93C5FD;
+      color: #1D4ED8;
+      font-weight: 600;
+    }
+
     /* ─── REQUEST PAGE ────────────────────────────────────────── */
     .req-wrap {
       max-width: 1100px;
@@ -785,7 +806,7 @@
           </svg>
           <span>Request hazardous<br>addition</span>
         </button>
-        <button class="btn-secondary">
+        <button class="btn-secondary" onclick="showPage('catalogue')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
@@ -1309,18 +1330,127 @@
 </div>
 
 
+<!-- ═══════════════════ PAGE 3: CATALOGUE SEARCH ═══════════════════ -->
+<div id="catalogue-page" class="page">
+  <div class="portal-wrap">
+
+    <!-- Header row -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:22px;font-weight:700;letter-spacing:-0.3px;margin-bottom:4px">Showing results for "acetone"</div>
+        <div style="font-size:13px;color:var(--text-muted)">
+          1 of 51 on the QH register · also
+          <a class="link" style="font-size:13px">12,483 in master catalogue</a>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="showPage('request')" style="margin-top:4px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Request to add to my inventory
+      </button>
+    </div>
+
+    <!-- Product recall banner -->
+    <div style="background:#FEF2F2;border:1px solid #FCCACA;border-left:4px solid #DC2626;border-radius:6px;padding:13px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" style="flex-shrink:0;margin-top:1px">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div>
+        <div style="font-size:13px;font-weight:700;color:#7F1D1D;margin-bottom:3px">Active product recall — Glutaraldehyde 2%</div>
+        <div style="font-size:12.5px;color:#991B1B">Batch GLU-2-2025 (Ecolab Australia). Discontinue use; isolate batch; coordinate return. Recall REC-2026-0008.</div>
+      </div>
+    </div>
+
+    <!-- Filter chips -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--text-muted);font-weight:500">Filter:</span>
+      <button class="filter-chip">Hazardous only</button>
+      <button class="filter-chip">Alternatives available</button>
+      <button class="filter-chip">Held at my location</button>
+      <button class="filter-chip">GHS pictogram</button>
+      <button class="filter-chip">Schedule 10/14</button>
+      <button class="filter-chip active-chip">DG class 3 — Flammable</button>
+    </div>
+
+    <!-- Result card -->
+    <div class="card" style="padding:18px 20px">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <!-- GHS icons -->
+        <div style="display:flex;gap:4px;flex-shrink:0;margin-top:2px">
+          <!-- Flame diamond -->
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <polygon points="16,2 30,16 16,30 2,16" fill="white" stroke="#DC2626" stroke-width="2"/>
+            <text x="16" y="21" text-anchor="middle" font-size="14">🔥</text>
+          </svg>
+          <!-- Exclamation diamond -->
+          <svg width="32" height="32" viewBox="0 0 32 32">
+            <polygon points="16,2 30,16 16,30 2,16" fill="white" stroke="#DC2626" stroke-width="2"/>
+            <line x1="16" y1="11" x2="16" y2="19" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="16" cy="22" r="1.5" fill="#DC2626"/>
+          </svg>
+        </div>
+
+        <!-- Main content -->
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:17px;font-weight:700">Acetone</span>
+            <span class="badge-high">High</span>
+            <span style="display:inline-flex;padding:2px 8px;background:#FEF3C7;color:#92400E;border-radius:20px;font-size:11px;font-weight:700">DG 3</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:5px">
+            PRD-0001 · CAS 67-64-1 · Sigma-Aldrich (Merck) Australia · 99.5%
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px">
+            Danger · H225 Highly flammable liquid and vapour
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <button class="btn-outline" style="font-size:12px;padding:6px 12px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              View SDS
+            </button>
+            <button class="btn-outline" onclick="showPage('request')" style="font-size:12px;padding:6px 12px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Request to add
+            </button>
+          </div>
+        </div>
+
+        <!-- SDS currency -->
+        <div style="font-size:12px;color:var(--text-muted);flex-shrink:0;margin-top:4px">
+          SDS current to 01 May 2027
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 <script>
   function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(page + '-page').classList.add('active');
 
     const isPortal = page === 'portal';
-    document.getElementById('hdrSearch').style.display = isPortal ? 'block' : 'none';
+    const isCatalogue = page === 'catalogue';
+    document.getElementById('hdrSearch').style.display = (isPortal || isCatalogue) ? 'block' : 'none';
     document.getElementById('navPortal').classList.toggle('active', isPortal);
     document.getElementById('navWorkspace').classList.remove('active');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  // Wire up the header search bar — pressing Enter goes to catalogue
+  document.querySelector('.hdr-search input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') showPage('catalogue');
+  });
 </script>
 
 </body>
