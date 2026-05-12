@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QH ECMS Demo Script</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Calibri', Arial, sans-serif;
+      font-size: 11pt;
+      color: #1a1a1a;
+      background: #E8E8E8;
+      padding: 30px 20px;
+      line-height: 1.5;
+    }
+
+    .page {
+      background: white;
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 30px;
+      padding: 22mm 22mm 22mm 25mm;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Cover page */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 250mm;
+    }
+
+    .cover-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 60px;
+    }
+
+    .qh-shield-cover {
+      width: 48px;
+      height: 48px;
+    }
+
+    .cover-logo-text {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #7B1C1C;
+      line-height: 1.2;
+    }
+
+    .cover-body { flex: 1; }
+
+    .cover-eyebrow {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #7B1C1C;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 16px;
+    }
+
+    .cover-title {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #111;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .cover-subtitle {
+      font-size: 13pt;
+      color: #555;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 32px;
+      border-top: 1px solid #E2E4E8;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .cover-meta-item { font-size: 10pt; color: #555; }
+    .cover-meta-item strong { color: #111; font-weight: 600; }
+
+    .cover-footer {
+      border-top: 3px solid #7B1C1C;
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9pt;
+      color: #888;
+    }
+
+    .cover-footer .conf { color: #7B1C1C; font-weight: 600; }
+
+    /* Body pages */
+    h1 {
+      font-size: 16pt;
+      font-weight: 700;
+      color: #7B1C1C;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #7B1C1C;
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #111;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #7B1C1C;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 20px;
+      margin-bottom: 6px;
+    }
+
+    p { margin-bottom: 10px; font-size: 10.5pt; color: #333; line-height: 1.6; }
+
+    ul { margin: 6px 0 12px 20px; }
+    li { font-size: 10.5pt; color: #333; margin-bottom: 4px; line-height: 1.55; }
+
+    /* Strategy callout boxes */
+    .callout {
+      background: #FEF9F0;
+      border-left: 4px solid #D97706;
+      border-radius: 0 5px 5px 0;
+      padding: 10px 14px;
+      margin: 14px 0;
+    }
+    .callout-label {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #B45309;
+      margin-bottom: 4px;
+    }
+    .callout p { margin: 0; font-size: 10pt; color: #78350F; }
+
+    .callout-red {
+      background: #FEF2F2;
+      border-left-color: #7B1C1C;
+    }
+    .callout-red .callout-label { color: #7B1C1C; }
+    .callout-red p { color: #7F1D1D; }
+
+    .callout-blue {
+      background: #EFF6FF;
+      border-left-color: #1D4ED8;
+    }
+    .callout-blue .callout-label { color: #1D4ED8; }
+    .callout-blue p { color: #1e3a8a; }
+
+    /* Presenter chips */
+    .presenter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .presenter-chip {
+      border: 1px solid #E2E4E8;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .presenter-chip .name {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 3px;
+    }
+    .presenter-chip .role-label {
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #7B1C1C;
+      margin-bottom: 4px;
+    }
+    .presenter-chip .desc { font-size: 9pt; color: #555; line-height: 1.45; }
+
+    /* Script tables */
+    .script-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px;
+      font-size: 9.5pt;
+    }
+
+    .script-table th {
+      background: #7B1C1C;
+      color: white;
+      padding: 7px 10px;
+      text-align: left;
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .script-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #E8E8E8;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .script-table tr:last-child td { border-bottom: none; }
+
+    /* Row colour coding */
+    .row-gary { background: #F9F9F9; }
+    .row-tricia { background: #FFFFFF; }
+    .row-gautam { background: #F5F5F5; }
+    .row-wow { background: #FFFBEB; border-left: 3px solid #F59E0B; }
+    .row-wow td:first-child { font-weight: 700; }
+
+    /* Column widths */
+    .col-time  { width: 7%; white-space: nowrap; }
+    .col-who   { width: 10%; font-weight: 600; }
+    .col-screen { width: 28%; font-style: italic; color: #555; }
+    .col-words { width: 42%; }
+    .col-notes { width: 13%; color: #888; font-size: 9pt; }
+
+    /* Presenter tags */
+    .tag {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 3px;
+      font-size: 8pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .tag-gary    { background: #FEE2E2; color: #7B1C1C; }
+    .tag-tricia  { background: #EFF6FF; color: #1D4ED8; }
+    .tag-gautam  { background: #F0FDF4; color: #15803D; }
+    .tag-all     { background: #F3F4F6; color: #374151; }
+
+    /* Wow moment label */
+    .wow-label {
+      display: inline-block;
+      background: #F59E0B;
+      color: white;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      margin-left: 4px;
+    }
+
+    /* Section header rows */
+    .section-hdr td {
+      background: #F0EEE8;
+      font-weight: 700;
+      font-size: 9pt;
+      color: #7B1C1C;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 6px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* Time marker */
+    .time { font-weight: 700; color: #7B1C1C; }
+
+    /* Legend */
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9pt;
+      color: #444;
+    }
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      border: 1px solid #ccc;
+    }
+
+    /* Page break */
+    .page-break { page-break-after: always; }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid #E2E4E8;
+      margin: 20px 0;
+    }
+
+    /* Block header */
+    .block-hdr {
+      background: #7B1C1C;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      margin: 20px 0 12px;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .block-hdr .block-label {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+    .block-hdr .block-title {
+      font-size: 11pt;
+      font-weight: 700;
+    }
+    .block-hdr .block-time {
+      font-size: 9pt;
+      opacity: 0.75;
+      margin-left: auto;
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .page {
+        box-shadow: none;
+        margin: 0;
+        page-break-after: always;
+        width: 100%;
+        padding: 15mm 18mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ COVER PAGE ═══════════════ -->
+<div class="page">
+  <div class="cover">
+    <div>
+      <div class="cover-logo">
+        <svg class="qh-shield-cover" viewBox="0 0 48 54" fill="none">
+          <path d="M24 2L3 11V27c0 13.5 9 23.5 21 26 12-2.5 21-12.5 21-26V11L24 2z" fill="#7B1C1C"/>
+          <path d="M24 8L7 15V27c0 10 6.5 18.5 17 21.5 10.5-3 17-11.5 17-21.5V15L24 8z" fill="white" opacity="0.1"/>
+          <text x="24" y="34" text-anchor="middle" font-size="16" font-weight="bold" fill="white" font-family="Georgia,serif">QH</text>
+        </svg>
+        <div class="cover-logo-text">Queensland<br>Health</div>
+      </div>
+
+      <div class="cover-eyebrow">Demonstration Script — Confidential</div>
+      <div class="cover-title">Enterprise Chemical<br>Management System</div>
+      <div class="cover-subtitle">Presenter guide and click-by-click script for the<br>QH ECMS solution demonstration.</div>
+
+      <div class="cover-meta">
+        <div class="cover-meta-item"><strong>Duration</strong><br>Approx. 30–45 minutes</div>
+        <div class="cover-meta-item"><strong>Format</strong><br>Live interactive prototype</div>
+        <div class="cover-meta-item"><strong>Presenters</strong><br>Gary · Tricia · Gautam</div>
+        <div class="cover-meta-item"><strong>Version</strong><br>Draft 1 — May 2026</div>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <div>
+        <div class="conf">COMMERCIAL IN CONFIDENCE</div>
+        <div>For authorised recipients only. Do not distribute.</div>
+      </div>
+      <div style="text-align:right">
+        Queensland Health ECMS<br>
+        Demo Script v1
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════ READING GUIDE ═══════════════ -->
+<div class="page">
+  <h1>How to Read This Script</h1>
+
+  <p>This document is a presenter guide, not a verbatim transcript. The <strong>Spoken Words</strong> column captures the key messages each presenter must land. Deliver them in your own voice. The <strong>On Screen</strong> column describes what Gautam clicks or what appears on the prototype.</p>
+
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#FFFBEB;border-color:#F59E0B"></div>
+      <span><strong>Yellow rows</strong> = Wow moment. Pause. Let it register.</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#F9F9F9"></div>
+      <span><strong>Gary rows</strong> = Scene-setting, transitions, Q&amp;A</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#FFFFFF;border-color:#ddd"></div>
+      <span><strong>Tricia rows</strong> = Primary narration as Gautam clicks</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-swatch" style="background:#F5F5F5"></div>
+      <span><strong>Gautam rows</strong> = Click instruction only, no scripted words</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>The Presenter Model</h2>
+
+  <div class="presenter-grid">
+    <div class="presenter-chip">
+      <div class="role-label">Senior Lead</div>
+      <div class="name">Gary</div>
+      <div class="desc">Opens the session, introduces the team, sets up each block, lands key transitions, and handles all Q&amp;A. Approximately 10 minutes of speaking time spread across the session.</div>
+    </div>
+    <div class="presenter-chip">
+      <div class="role-label">Primary Narrator</div>
+      <div class="name">Tricia</div>
+      <div class="desc">Narrates as Gautam clicks — what is happening on screen, why it matters, how it connects to QH operations. Primary voice for approximately 25–30 minutes.</div>
+    </div>
+    <div class="presenter-chip">
+      <div class="role-label">Demo Driver</div>
+      <div class="name">Gautam</div>
+      <div class="desc">Drives the prototype. Knows every click, every screen, every data point. No scripted speaking role, but can add commentary where it comes naturally.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>Demo Flow — Four Blocks</h2>
+
+  <p>The demo is structured in four progressive blocks. Each block layers understanding on top of the last. Do not reorder them.</p>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th style="width:10%">Block</th>
+        <th style="width:25%">Theme</th>
+        <th style="width:35%">What the audience sees</th>
+        <th style="width:15%">Time</th>
+        <th style="width:15%">Lead voice</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>A</strong></td>
+        <td>The Scientist's World</td>
+        <td>Portal dashboard — a scientist's daily view of their lab's chemical landscape</td>
+        <td>0:00 – 0:08</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+      </tr>
+      <tr>
+        <td><strong>B</strong></td>
+        <td>Finding What You Need</td>
+        <td>Catalogue search — finding a chemical, reading its SDS, understanding its hazard profile</td>
+        <td>0:08 – 0:16</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+      </tr>
+      <tr>
+        <td><strong>C</strong></td>
+        <td>Adding a Chemical Safely</td>
+        <td>Hazardous addition request — incompatibility detection, approval workflow, compliance guardrails</td>
+        <td>0:16 – 0:28</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+      </tr>
+      <tr>
+        <td><strong>D</strong></td>
+        <td>Capability Summary &amp; Q&amp;A</td>
+        <td>Wrap-up, broader system capabilities, open questions</td>
+        <td>0:28 – 0:35</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <h2>The Three Wow Moments</h2>
+
+  <div class="callout callout-red">
+    <div class="callout-label">Wow Moment 1 — First 60 seconds</div>
+    <p>The dashboard loads and the audience sees Sarah's complete chemical world — live inventory, overdue training, pending approvals, recent activity — all in one screen. No hunting. No spreadsheets.</p>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-label">Wow Moment 2 — Minute 12</div>
+    <p>The catalogue finds Acetone in under two seconds. The system already knows it is High risk, DG Class 3, and shows SDS currency. The recall banner for an unrelated product fires automatically — the system is watching.</p>
+  </div>
+
+  <div class="callout callout-red">
+    <div class="callout-label">Wow Moment 3 — Minute 20</div>
+    <p>Sarah tries to add Acetone next to oxidisers. The system fires an incompatibility alert before she can submit — citing the exact AS/NZS 4452 rule being violated and offering three pre-calculated safe alternatives. The evaluators see compliance built in, not bolted on.</p>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════ BLOCK A ═══════════════ -->
+<div class="page">
+  <h1>Block A — The Scientist's World</h1>
+  <p style="color:#555;font-size:10pt;margin-bottom:8px">Duration: ~8 minutes &nbsp;|&nbsp; Lead: Gary opens, Tricia takes over &nbsp;|&nbsp; Screen: Portal Dashboard</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Strategic Purpose</div>
+    <p>Establish the daily reality for a laboratory scientist managing hazardous chemicals. The audience should finish this block understanding who uses the system, what their daily pressures look like, and why a fragmented status quo is a compliance and safety risk.</p>
+  </div>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th class="col-time">Time</th>
+        <th class="col-who">Who</th>
+        <th class="col-screen">On Screen / Action</th>
+        <th class="col-words">Spoken Words</th>
+        <th class="col-notes">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="row-gary">
+        <td class="time">0:00</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Team visible. No screen share yet.</td>
+        <td>Good morning — thank you for having us. I'm Gary, and I'm going to be guiding you through today. With me is Tricia, who will walk you through the system scenario by scenario, and Gautam, our technical lead who is driving the demo. Let's get into it.</td>
+        <td>Warm, brief. Do not over-introduce.</td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:01</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Still no screen share.</td>
+        <td>Before we touch the screen, I want to give you thirty seconds of context. Queensland Health manages thousands of hazardous chemicals across hundreds of laboratories. Right now, that management is fragmented — spreadsheets, paper registers, email approvals. ECMS changes that. What you're about to see is a single, integrated platform for every part of the chemical management lifecycle — from acquiring a chemical, to storing it safely, to disposing of it compliantly. Let's show you what that looks like in practice.</td>
+        <td>Sets the problem before showing the solution.</td>
+      </tr>
+
+      <tr class="row-gautam">
+        <td class="time">0:02</td>
+        <td><span class="tag tag-gautam">Gautam</span></td>
+        <td>Share screen. Navigate to the ECMS Portal — the dashboard lands on Dr Sarah Chen's view.</td>
+        <td><em>(no words — click)</em></td>
+        <td>Let the dashboard render completely before Tricia speaks.</td>
+      </tr>
+
+      <tr class="row-wow">
+        <td class="time">0:02</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Portal dashboard fully visible. <strong>Pause 3 seconds.</strong></td>
+        <td>This is Sarah. She's a Senior Scientist at Royal Brisbane and Women's Hospital, Lab 312 — Wet Chemistry. This is what she sees the moment she logs in. Not a menu, not a list of modules — her world. Right now. <span class="wow-label">Wow 1</span></td>
+        <td>Pause after "her world." Let it land.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:03</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Dashboard — left card: inventory panel.</td>
+        <td>On the left, she can see every chemical in Lab 312 right now. Five chemicals. Three are High risk. She knows where each one is stored — Oxidisers Locker B, Flammables Cabinet A — without opening a register or calling the lab manager.</td>
+        <td>Point to inventory card naturally.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:04</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Dashboard — centre card: tasks panel.</td>
+        <td>In the middle, her tasks and approvals. Three items — one due tomorrow, one already overdue, one awaiting WHS sign-off. The system is not just storing data. It's actively managing her obligations. She doesn't need to remember. The system remembers for her.</td>
+        <td>Emphasise "The system remembers."</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:05</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Dashboard — right card: training panel.</td>
+        <td>On the right — her training status. Two certifications current, one overdue. Hazardous Spills — flagged in red. The system surfaces this because it matters. In a lab environment, an untrained operator is a safety and compliance risk. ECMS makes that visible before it becomes an incident.</td>
+        <td>Connect to real-world consequence.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:06</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Dashboard — bottom row: recent activity + quick actions.</td>
+        <td>Below that, recent activity across her lab — who added what, who approved what, what the system flagged automatically. And on the right, her quick actions. Search SDS, add a product, scan a barcode, report an incident. Everything she needs is one click away from this screen.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:07</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Dashboard still showing.</td>
+        <td>What Tricia has just described is not a report. It is not a read-only view. Everything you see here is live and actionable. Sarah can approve a task, request a chemical, or escalate a training issue without leaving this screen. Let me show you what happens when she needs a new chemical.</td>
+        <td>Transition to Block B.</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════ BLOCK B ═══════════════ -->
+<div class="page">
+  <h1>Block B — Finding What You Need</h1>
+  <p style="color:#555;font-size:10pt;margin-bottom:8px">Duration: ~8 minutes &nbsp;|&nbsp; Lead: Tricia &nbsp;|&nbsp; Screen: Catalogue Search Results</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Strategic Purpose</div>
+    <p>Show that the system knows its chemicals — not just as names in a list but as structured safety data. The catalogue is where regulatory intelligence lives. The recall banner demonstrates that the system is proactive, not just reactive.</p>
+  </div>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th class="col-time">Time</th>
+        <th class="col-who">Who</th>
+        <th class="col-screen">On Screen / Action</th>
+        <th class="col-words">Spoken Words</th>
+        <th class="col-notes">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="row-tricia">
+        <td class="time">0:08</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Dashboard — hover over Search catalogue button.</td>
+        <td>Sarah needs to add Acetone to her lab. The first step is finding it in the catalogue. She doesn't go to a separate system or open a browser tab. She searches right here.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-gautam">
+        <td class="time">0:08</td>
+        <td><span class="tag tag-gautam">Gautam</span></td>
+        <td>Click "Search catalogue" on the welcome banner. Catalogue results page loads.</td>
+        <td><em>(no words — click)</em></td>
+        <td>Let the results page fully render before Tricia speaks.</td>
+      </tr>
+
+      <tr class="row-wow">
+        <td class="time">0:09</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Catalogue results page. Acetone result visible. <strong>Pause 2 seconds.</strong></td>
+        <td>One result. Instant. The system searched 51 chemicals on the QH register and cross-referenced 12,483 products in the master catalogue. She has her answer before she has finished reading the screen. <span class="wow-label">Wow 2</span></td>
+        <td>Pause after "finished reading the screen."</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:10</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the product recall banner at the top of the results.</td>
+        <td>Notice what fires at the top of the page before she even looks at the result. An active product recall. Glutaraldehyde 2% — a completely different chemical — has an active recall notice. Batch GLU-2-2025 from Ecolab Australia. Discontinue, isolate, coordinate return. Sarah didn't ask for this. The system surfaced it because it's relevant to her lab. That is proactive compliance management.</td>
+        <td>Emphasise that Sarah did not ask for this. The system volunteered it.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:11</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to filter chips below the recall banner.</td>
+        <td>She can refine these results further — filter by hazard class, by chemicals held at her location, by GHS pictogram, by scheduled substance class. The system is already filtered to DG Class 3 — Flammable, which is Acetone's classification. Everything is contextual.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:12</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the Acetone result card — GHS icons, badges, danger statement, SDS date.</td>
+        <td>And here is Acetone. PRD-0001. CAS 67-64-1. Sigma-Aldrich Merck, 99.5% purity. The system shows her the GHS hazard pictograms — the flame and the exclamation mark — alongside the danger statement: H225, highly flammable liquid and vapour. She can see at a glance that the SDS is current to May 2027. No chasing. No uncertainty.</td>
+        <td>Walk through the card elements left to right.</td>
+      </tr>
+
+      <tr class="row-gautam">
+        <td class="time">0:13</td>
+        <td><span class="tag tag-gautam">Gautam</span></td>
+        <td>Hover over the "View SDS" button on the Acetone card.</td>
+        <td><em>(no words — hover only, do not click)</em></td>
+        <td>Creates visual emphasis without navigating away.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:13</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>SDS button highlighted.</td>
+        <td>From here she can pull up the full Safety Data Sheet in one click — the current version, stored and managed within ECMS. She can also go straight to requesting this product for her inventory. That's what she's going to do next.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:15</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Catalogue results still showing.</td>
+        <td>This is the intelligence layer that underpins everything else. The system doesn't just hold chemical names. It holds hazard classifications, SDS versions, recall status, and regulatory obligations — and it surfaces the right information at the right moment. Let's follow Sarah as she tries to add this chemical to her lab, because this is where the system's safety logic really comes to life.</td>
+        <td>Transition to Block C. Let the audience anticipate what comes next.</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════ BLOCK C ═══════════════ -->
+<div class="page">
+  <h1>Block C — Adding a Chemical Safely</h1>
+  <p style="color:#555;font-size:10pt;margin-bottom:8px">Duration: ~12 minutes &nbsp;|&nbsp; Lead: Tricia &nbsp;|&nbsp; Screen: Request to Add Hazardous Product</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Strategic Purpose</div>
+    <p>This is the centrepiece of the demo. It proves that ECMS does not just record what people do — it actively prevents unsafe decisions. The incompatibility detection is the strongest differentiator. Give this block time and space.</p>
+  </div>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th class="col-time">Time</th>
+        <th class="col-who">Who</th>
+        <th class="col-screen">On Screen / Action</th>
+        <th class="col-words">Spoken Words</th>
+        <th class="col-notes">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="row-gautam">
+        <td class="time">0:16</td>
+        <td><span class="tag tag-gautam">Gautam</span></td>
+        <td>Click "Request to add" on the Acetone catalogue card. Request form loads.</td>
+        <td><em>(no words — click)</em></td>
+        <td>Pause before Tricia speaks. Let the form and the red alert panel both settle on screen.</td>
+      </tr>
+
+      <tr class="row-wow">
+        <td class="time">0:16</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Request form. Incompatibility alert dominates the top of the form. <strong>Pause 4 seconds.</strong></td>
+        <td>Sarah has done everything right. She found the product, she is using the right form, she has selected Flammables Cabinet A — her lab's designated flammables storage. And the system has stopped her. Before she can submit. Before she can make a mistake. <span class="wow-label">Wow 3</span></td>
+        <td>This is the biggest pause in the demo. Let the red alert speak for itself.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:17</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the incompatibility alert heading: "Incompatibility detected (BR008, BR009)".</td>
+        <td>The system has detected two incompatibility rules — BR008 and BR009. Flammables Cabinet A sits inside Lab 312, which already holds Hydrogen peroxide and Potassium permanganate. Both are oxidisers. Acetone is a flammable solvent — DG Class 3. The system knows that storing a flammable next to an oxidiser violates AS/NZS 4452 segregation requirements. It tells her exactly why — and it tells her before anything is stored, ordered, or approved.</td>
+        <td>Pause on "before anything is stored." This is the compliance value.</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:18</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the "Why this matters" box within the alert.</td>
+        <td>The system doesn't just flag the conflict. It explains it in plain language. Acetone and hydrogen peroxide stored together creates a credible fire and explosion hazard. The citation is there. The reason is there. A scientist who has never encountered this incompatibility now understands exactly why the system is intervening.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:19</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to three action buttons: Choose compatible location, Move oxidiser instead, Override.</td>
+        <td>And the system gives her three paths forward. She can choose a compatible location — the system has already calculated which ones work. She can move the oxidiser instead — maybe that's the right answer for this lab. Or she can request an override with WHS sign-off — for situations where operational necessity overrides the standard rule. The system is not blocking her. It is ensuring that whatever she does next is a deliberate, documented decision.</td>
+        <td>Emphasise "deliberate, documented decision."</td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:20</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the blue "Suggested compatible locations" panel below the alert.</td>
+        <td>Below the alert, the system has already done the work. Three compatible locations within Royal Brisbane and Women's Hospital — ranked by proximity and suitability. Lab 312's Flammables Cabinet A in the same room. The Bulk Chemical Store two floors down. A prep area across the courtyard. Distance, classification, and current holdings — all surfaced automatically. Sarah can select one in a single click.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:21</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Scroll down to the form fields — Product, Location, Quantity, Batch, Expiry, Custodian, Reason.</td>
+        <td>When she's resolved the incompatibility, the rest of the form captures everything the system needs — quantity, batch number, expiry date, custodian, reason for addition. This is the data that drives the audit trail. Every field has a purpose. Nothing is captured for its own sake.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:22</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the right-hand sidebar — Approval Workflow, SDS Check, Audit History.</td>
+        <td>On the right, the approval workflow is already assembled. The system knows this request goes to Susan Mannerheim — the WHS Advisor for Metro North HHS. Two business day SLA. If Susan doesn't action it, it escalates automatically to Aisha Rahman after day three. No chasing. No dropped requests. The workflow runs itself.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:23</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to SDS Check and Audit History in the sidebar.</td>
+        <td>Below that, SDS currency — reviewed 01 May 2025, Acetone v3.0 current. And the audit trail — every action, every timestamp, every system check already recorded. Sarah started the request at 08:18. The incompatibility check ran at 08:32. This is not added to the audit trail at the end. It is written as it happens.</td>
+        <td></td>
+      </tr>
+
+      <tr class="row-tricia">
+        <td class="time">0:24</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+        <td>Point to the greyed-out "Submit for approval" button and the note below the form.</td>
+        <td>And notice — the submit button is disabled. Sarah cannot submit while the incompatibility is active. This is not optional compliance. The system enforces it. The only way to submit is to resolve the conflict. That resolution is recorded. That decision is owned. That is how a safety management system should work.</td>
+        <td>End on "should work" with conviction. This is the close of the centrepiece.</td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:26</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Request form still showing.</td>
+        <td>What Tricia has walked you through is the compliance layer working exactly as it should. The system knows the rules. It applies them before any human can make a mistake. And it keeps a complete, tamper-evident record of every decision. That is not a feature. That is the foundation of a system that Queensland Health can trust at scale.</td>
+        <td>Gary takes back the room here. Deliberate, measured delivery.</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ═══════════════ BLOCK D ═══════════════ -->
+<div class="page">
+  <h1>Block D — Capability Summary &amp; Q&amp;A</h1>
+  <p style="color:#555;font-size:10pt;margin-bottom:8px">Duration: ~7 minutes &nbsp;|&nbsp; Lead: Gary &nbsp;|&nbsp; Screen: Dashboard or blank</p>
+
+  <div class="callout callout-blue">
+    <div class="callout-label">Strategic Purpose</div>
+    <p>Land the broader system story — this is not just three screens, it is an enterprise platform. Then open the floor for questions. Gary owns this block entirely.</p>
+  </div>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th class="col-time">Time</th>
+        <th class="col-who">Who</th>
+        <th class="col-screen">On Screen / Action</th>
+        <th class="col-words">Spoken Words</th>
+        <th class="col-notes">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr class="row-gary">
+        <td class="time">0:28</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Navigate back to the Portal dashboard.</td>
+        <td>Let me bring you back to where we started. Sarah's dashboard. Three screens in, and here is what you have seen: a scientist who knows the status of her entire lab at a glance. A catalogue that surfaces the right safety information without being asked. And a system that catches a dangerous storage decision before it can be made. That is the ECMS experience.</td>
+        <td>Reflective tone. Summarise without repeating.</td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:29</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Dashboard visible. No clicking required.</td>
+        <td>What you have not seen today — and what we are ready to show — is the WHS Advisor's approval queue. The inventory management workflow. Risk assessment and SDS version control. Disposal tracking. Reporting dashboards for executive and compliance oversight. Barcode scanning for physical stock takes. Incident reporting. Every one of those capabilities is built and ready. Today we showed you the core user journey. The full platform extends well beyond it.</td>
+        <td>Scope-sets without overwhelming. Creates appetite for follow-up.</td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:31</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>Screen can be minimised or left on dashboard.</td>
+        <td>Before I open to questions, three things I want you to take away from what you have seen today. First — the system enforces compliance before mistakes happen, not after. Second — every action is auditable, timestamped, and owned. Third — the scientist, the WHS advisor, and the lab manager all have exactly the information they need, at the moment they need it, without looking for it. That is what good system design looks like in a safety-critical environment.</td>
+        <td>Deliver these three points slowly and distinctly. Pause between each.</td>
+      </tr>
+
+      <tr class="row-gary">
+        <td class="time">0:33</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+        <td>No screen action needed.</td>
+        <td>We would love to hear your questions. Gautam and I are both here to go deeper on any part of what you have seen — the workflow logic, the compliance rule engine, the integration approach, or the data model underneath. What would you like to explore?</td>
+        <td>Open, confident. Not defensive. Invite questions, do not deflect them.</td>
+      </tr>
+
+      <tr class="row-all">
+        <td class="time">0:34+</td>
+        <td><span class="tag tag-all">All</span></td>
+        <td>Gautam ready to navigate to any screen on request.</td>
+        <td><em>(Q&amp;A — respond in your own words. Gautam navigates to relevant screens as questions arise.)</em></td>
+        <td>Gary handles commercial and architecture questions. Tricia handles workflow and user questions. Gautam navigates to any screen to support answers.</td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <h2>Anticipated Questions</h2>
+
+  <table class="script-table">
+    <thead>
+      <tr>
+        <th style="width:35%">If they ask...</th>
+        <th style="width:50%">Key points to hit</th>
+        <th style="width:15%">Who answers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>How does the incompatibility rule engine work?</td>
+        <td>Rules are configurable by WHS policy owners, not hard-coded. Each rule cites the regulatory reference (AS/NZS 4452, WHS Regulations). New rules can be added without development effort.</td>
+        <td><span class="tag tag-gary">Gary</span> + <span class="tag tag-gautam">Gautam</span></td>
+      </tr>
+      <tr>
+        <td>How does SDS management work?</td>
+        <td>SDS documents are stored, versioned, and linked to products. Expiry alerts are automated. The system tracks which version was current at the time of each action — important for post-incident review.</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+      </tr>
+      <tr>
+        <td>Can different hospitals/labs have different rules?</td>
+        <td>Yes. The system supports location-specific rule sets and approval hierarchies. Metro North HHS and Gold Coast Health can have different WHS Advisor chains without any configuration conflict.</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+      </tr>
+      <tr>
+        <td>How does the approval workflow handle leave or absence?</td>
+        <td>Delegates can be configured per approver. The system also has automatic escalation on SLA breach — as you saw with Susan Mannerheim escalating to Aisha Rahman after 3 days.</td>
+        <td><span class="tag tag-tricia">Tricia</span></td>
+      </tr>
+      <tr>
+        <td>What happens if someone tries to override the incompatibility?</td>
+        <td>Overrides require WHS sign-off — they cannot be self-approved. The override request, the justification, and the approver are all written to the audit trail. The system permits it but ensures accountability.</td>
+        <td><span class="tag tag-gary">Gary</span></td>
+      </tr>
+      <tr>
+        <td>How does barcode/physical stock management work?</td>
+        <td>Each chemical item has a barcode generated on addition. Mobile-compatible scanning updates inventory in real time. Stock takes can be run from a tablet on the lab floor without a laptop.</td>
+        <td><span class="tag tag-gautam">Gautam</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="divider">
+
+  <h2>Closing — If Asked for a Single Summary Statement</h2>
+
+  <div class="callout">
+    <div class="callout-label">Gary — Closing line</div>
+    <p>"ECMS does not just manage chemicals. It manages the decisions people make about chemicals — and it makes sure those decisions are safe, compliant, and owned. That is the difference between a records system and a safety management system."</p>
+  </div>
+
+</div>
+
+</body>
+</html>
